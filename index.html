@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#5b66ee">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="私密密码库">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <title>私密密码库</title>
+  <style>
+    :root{--ink:#17243a;--muted:#68758b;--line:#e5eaf1;--bg:#f5f7fb;--card:#fff;--brand:#5b66ee;--danger:#c74757;--ok:#16855f}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Microsoft YaHei",system-ui,sans-serif}.wrap{max-width:1000px;margin:auto;padding:32px 20px 60px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 5px 24px #1c29430d}.gate{max-width:460px;margin:10vh auto;padding:30px}.logo{font-size:27px;font-weight:800;margin:0 0 4px}.sub{color:var(--muted);margin:0 0 22px}.field{display:grid;gap:6px;margin:14px 0;color:var(--muted);font-size:13px;font-weight:700}.field input,.field textarea,.search{border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:#fff;color:var(--ink);font:inherit}.field input:focus,.field textarea:focus,.search:focus{outline:3px solid #5b66ee20;border-color:var(--brand)}.field textarea{min-height:84px;resize:vertical}button{border:0;border-radius:10px;padding:10px 15px;font:inherit;font-weight:700;cursor:pointer;background:var(--brand);color:white}button:hover{filter:brightness(.96)}button.ghost{color:#42516c;background:#edf0f6}.danger{color:var(--danger)!important;background:#fff0f1!important}.hint{font-size:13px;color:var(--muted);margin:16px 0 0}.error{color:var(--danger);font-size:13px;min-height:20px}.app{display:none}.head{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:21px}.head h1{font-size:25px;margin:0}.actions{display:flex;gap:8px;flex-wrap:wrap}.toolbar{padding:15px;display:flex;gap:10px;align-items:center;margin-bottom:15px}.search{flex:1}.count{white-space:nowrap;color:var(--muted);font-size:13px}.list{display:grid;gap:10px}.item{padding:16px;display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center}.favicon{height:40px;width:40px;border-radius:11px;display:grid;place-items:center;background:#e9ecff;color:#4050bc;font-weight:800;font-size:17px}.item h2{font-size:16px;margin:0}.item p{margin:2px 0 0;color:var(--muted);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.item-actions{display:flex;gap:7px}.item-actions button{padding:8px 10px}.empty{padding:45px 20px;text-align:center;color:var(--muted)}dialog{border:0;border-radius:18px;box-shadow:0 18px 50px #17243a3b;padding:0;max-width:520px;width:calc(100% - 28px)}dialog::backdrop{background:#17243a75}.modal{padding:22px}.modal h2{font-size:20px;margin:0 0 14px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.form-grid .wide{grid-column:1/-1}.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:19px}.foot{margin-top:19px;color:var(--muted);font-size:12px;text-align:center}.notice{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#17243a;color:white;border-radius:9px;padding:10px 14px;opacity:0;transition:opacity .2s;pointer-events:none}.notice.show{opacity:1}@media(max-width:600px){.wrap{padding:20px 14px}.head{align-items:flex-start;flex-direction:column}.form-grid{grid-template-columns:1fr}.item{padding:13px;grid-template-columns:36px 1fr}.favicon{height:36px;width:36px}.item-actions{grid-column:2}.toolbar{align-items:stretch;flex-wrap:wrap}.search{min-width:170px}.count{align-self:center}.gate{margin:6vh auto}.actions button{padding:8px 11px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="gate card" id="gate">
+      <h1 class="logo">🔐 私密密码库</h1>
+      <p class="sub" id="gateText">此密码库只保存在这台设备，并以主密码加密。</p>
+      <label class="field">主密码<input id="master" type="password" autocomplete="current-password" placeholder="输入主密码" autofocus></label>
+      <label class="field" id="confirmRow" hidden>确认主密码<input id="confirm" type="password" autocomplete="new-password" placeholder="再输入一次"></label>
+      <div class="error" id="gateError"></div>
+      <button id="unlock">解锁密码库</button>
+      <p class="hint" id="gateHint"></p>
+    </section>
+    <section class="app" id="app">
+      <header class="head"><div><h1>🔐 私密密码库</h1><div class="sub">本机加密保存 · 离开时请锁定</div></div><div class="actions"><button class="ghost" id="installBtn" hidden>安装到桌面</button><button class="ghost" id="exportBtn">导出加密备份</button><button class="ghost" id="importBtn">导入备份</button><button class="ghost" id="lockBtn">锁定</button><input id="importFile" type="file" accept="application/json" hidden></div></header>
+      <section class="toolbar card"><input class="search" id="search" placeholder="搜索名称、网址或用户名"><span class="count" id="count"></span><button id="addBtn">+ 新增条目</button></section>
+      <section class="list" id="list"></section>
+      <p class="foot">提示：主密码无法找回。请定期导出“加密备份”，不要把备份和主密码放在一起。</p>
+    </section>
+  </main>
+  <dialog id="editor"><form class="modal" method="dialog"><h2 id="editorTitle">新增密码</h2><div class="form-grid"><label class="field">名称<input id="name" required placeholder="如：GitHub"></label><label class="field">网址 / 应用<input id="url" placeholder="https://github.com"></label><label class="field">用户名 / 邮箱<input id="username" autocomplete="username"></label><label class="field">密码<div style="display:flex;gap:7px"><input id="password" type="password" autocomplete="new-password" style="min-width:0;flex:1"><button type="button" class="ghost" id="showPass">显示</button><button type="button" class="ghost" id="copyPass">复制</button></div></label><label class="field wide">备注<textarea id="notes" placeholder="可记录安全问题提示、恢复码位置等；不要记录主密码。"></textarea></label></div><div class="modal-actions"><button type="button" class="danger" id="deleteEntry" hidden>删除</button><button class="ghost" value="cancel">取消</button><button value="default" id="saveEntry">保存</button></div></form></dialog>
+  <div class="notice" id="notice"></div>
+  <script>
+    const STORE='private-password-vault-v1', ITERATIONS=310000; let installEvent=null;
+    const $=id=>document.getElementById(id); let key=null, vault={entries:[]}, editId=null;
+    const b64=a=>btoa(String.fromCharCode(...new Uint8Array(a))); const from64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+    const derive=async(password,salt)=>crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:ITERATIONS,hash:'SHA-256'},await crypto.subtle.importKey('raw',new TextEncoder().encode(password),'PBKDF2',false,['deriveKey']),{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+    async function encrypt(data,password){const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12)),k=await derive(password,salt),cipher=await crypto.subtle.encrypt({name:'AES-GCM',iv},k,new TextEncoder().encode(JSON.stringify(data)));return {version:1,salt:b64(salt),iv:b64(iv),cipher:b64(cipher)}}
+    async function decrypt(box,password){const k=await derive(password,from64(box.salt)),plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:from64(box.iv)},k,from64(box.cipher));return JSON.parse(new TextDecoder().decode(plain))}
+    const readBox=()=>{try{return JSON.parse(localStorage.getItem(STORE))}catch{return null}};
+    function toast(text){$('notice').textContent=text;$('notice').classList.add('show');setTimeout(()=>$('notice').classList.remove('show'),1800)}
+    async function save(){localStorage.setItem(STORE,JSON.stringify(await encrypt(vault,$('master').value)));render()}
+    function setupGate(){let exists=!!readBox();$('confirmRow').hidden=exists;$('unlock').textContent=exists?'解锁密码库':'创建密码库';$('gateText').textContent=exists?'输入主密码以解密本机保存的条目。':'设置一个强主密码。它不会上传，也无法找回。';$('gateHint').textContent=exists?'忘记主密码时，现有数据无法恢复。':'建议使用至少 12 位、自己能记住的独特长句。'}
+    $('unlock').onclick=async()=>{let p=$('master').value,e=$('gateError'),box=readBox();e.textContent='';if(p.length<10){e.textContent='主密码至少使用 10 个字符。';return}if(!box&&p!==$('confirm').value){e.textContent='两次输入的主密码不一致。';return}try{vault=box?await decrypt(box,p):{entries:[]};key=true;$('gate').style.display='none';$('app').style.display='block';render()}catch{e.textContent='主密码不正确，或备份文件已损坏。'}};
+    function safe(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+    function render(){let q=$('search').value.trim().toLowerCase(),items=vault.entries.filter(x=>[x.name,x.url,x.username,x.notes].join(' ').toLowerCase().includes(q)).sort((a,b)=>a.name.localeCompare(b.name,'zh'));$('count').textContent=`${items.length} 条`; $('list').innerHTML=items.length?items.map(x=>`<article class="item card"><div class="favicon">${safe(x.name.slice(0,1).toUpperCase()||'•')}</div><div><h2>${safe(x.name)}</h2><p>${safe(x.username||'未填写用户名')}${x.url?' · '+safe(x.url):''}</p></div><div class="item-actions"><button class="ghost" data-copy="${x.id}">复制密码</button><button class="ghost" data-edit="${x.id}">编辑</button></div></article>`).join(''):'<div class="empty card">还没有匹配的条目。点击“新增条目”开始记录。</div>'}
+    function openEditor(entry){editId=entry?.id||null;$('editorTitle').textContent=entry?'编辑密码':'新增密码';$('deleteEntry').hidden=!entry;for(const f of ['name','url','username','password','notes'])$(f).value=entry?.[f]||'';$('password').type='password';$('showPass').textContent='显示';$('editor').showModal();$('name').focus()}
+    $('addBtn').onclick=()=>openEditor();$('search').oninput=render;$('list').onclick=async e=>{let id=e.target.dataset.copy||e.target.dataset.edit;if(!id)return;let x=vault.entries.find(v=>v.id===id);if(e.target.dataset.copy){await navigator.clipboard.writeText(x.password);toast('密码已复制，使用后请留意剪贴板。')}else openEditor(x)};
+    $('showPass').onclick=()=>{let shown=$('password').type==='text';$('password').type=shown?'password':'text';$('showPass').textContent=shown?'显示':'隐藏'};$('copyPass').onclick=async()=>{await navigator.clipboard.writeText($('password').value);toast('已复制')};
+    $('saveEntry').onclick=async e=>{e.preventDefault();let entry=Object.fromEntries(['name','url','username','password','notes'].map(f=>[f,$(f).value.trim()]));if(!entry.name||!entry.password){toast('请至少填写名称和密码。');return}entry.id=editId||crypto.randomUUID();let i=vault.entries.findIndex(x=>x.id===entry.id);if(i<0)vault.entries.push(entry);else vault.entries[i]=entry;await save();$('editor').close();toast('已加密保存')};$('deleteEntry').onclick=async()=>{if(!editId||!confirm('确定删除这个条目？'))return;vault.entries=vault.entries.filter(x=>x.id!==editId);await save();$('editor').close();toast('条目已删除')};
+    $('lockBtn').onclick=()=>{key=null;vault={entries:[]};$('master').value='';$('gate').style.display='block';$('app').style.display='none';setupGate();$('master').focus()};
+    $('exportBtn').onclick=()=>{let blob=new Blob([localStorage.getItem(STORE)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`密码库加密备份-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(a.href);toast('已导出加密备份')};
+    $('importBtn').onclick=()=>$('importFile').click();$('importFile').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let box=JSON.parse(await f.text());if(!box.salt||!box.iv||!box.cipher)throw Error();await decrypt(box,$('master').value);localStorage.setItem(STORE,JSON.stringify(box));vault=await decrypt(box,$('master').value);render();toast('已导入加密备份')}catch{toast('导入失败：文件或主密码不匹配。')}e.target.value=''};
+    window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvent=e;$('installBtn').hidden=false});$('installBtn').onclick=async()=>{if(!installEvent){toast('iPhone 请在 Safari 的“分享”中选择“添加到主屏幕”。');return}installEvent.prompt();await installEvent.userChoice;installEvent=null;$('installBtn').hidden=true};window.addEventListener('appinstalled',()=>toast('已安装到桌面'));
+    if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
+    setupGate();
+  </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "私密密码库",
+  "short_name": "密码库",
+  "description": "本机加密保存的个人密码库",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#5b66ee",
+  "icons": [
+    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
